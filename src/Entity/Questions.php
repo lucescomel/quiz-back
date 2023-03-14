@@ -26,9 +26,13 @@ class Questions
     #[ORM\JoinColumn(nullable: false)]
     private ?Answers $id_success = null;
 
+    #[ORM\ManyToMany(targetEntity: Historics::class, mappedBy: 'id_question')]
+    private Collection $historics;
+
     public function __construct()
     {
         $this->answers = new ArrayCollection();
+        $this->historics = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -86,6 +90,33 @@ class Questions
     public function setIdSuccess(Answers $id_success): self
     {
         $this->id_success = $id_success;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Historics>
+     */
+    public function getHistorics(): Collection
+    {
+        return $this->historics;
+    }
+
+    public function addHistoric(Historics $historic): self
+    {
+        if (!$this->historics->contains($historic)) {
+            $this->historics->add($historic);
+            $historic->addIdQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHistoric(Historics $historic): self
+    {
+        if ($this->historics->removeElement($historic)) {
+            $historic->removeIdQuestion($this);
+        }
 
         return $this;
     }
