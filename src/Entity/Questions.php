@@ -26,13 +26,17 @@ class Questions
     #[ORM\JoinColumn(nullable: false)]
     private ?Answers $id_success = null;
 
-    #[ORM\ManyToMany(targetEntity: Historics::class, mappedBy: 'id_question')]
-    private Collection $historics;
+    #[ORM\OneToMany(mappedBy: 'id_question', targetEntity: HistoricsQuestions::class)]
+    private Collection $historicsQuestions;
+
+    // #[ORM\ManyToMany(targetEntity: Historics::class, mappedBy: 'id_question')]
+    // private Collection $historics;
 
     public function __construct()
     {
         $this->answers = new ArrayCollection();
-        $this->historics = new ArrayCollection();
+        // $this->historics = new ArrayCollection();
+        $this->historicsQuestions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -94,28 +98,58 @@ class Questions
         return $this;
     }
 
+    // /**
+    //  * @return Collection<int, Historics>
+    //  */
+    // public function getHistorics(): Collection
+    // {
+    //     return $this->historics;
+    // }
+
+    // public function addHistoric(Historics $historic): self
+    // {
+    //     if (!$this->historics->contains($historic)) {
+    //         $this->historics->add($historic);
+    //         $historic->addIdQuestion($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeHistoric(Historics $historic): self
+    // {
+    //     if ($this->historics->removeElement($historic)) {
+    //         $historic->removeIdQuestion($this);
+    //     }
+
+    //     return $this;
+    // }
+
     /**
-     * @return Collection<int, Historics>
+     * @return Collection<int, HistoricsQuestions>
      */
-    public function getHistorics(): Collection
+    public function getHistoricsQuestions(): Collection
     {
-        return $this->historics;
+        return $this->historicsQuestions;
     }
 
-    public function addHistoric(Historics $historic): self
+    public function addHistoricsQuestion(HistoricsQuestions $historicsQuestion): self
     {
-        if (!$this->historics->contains($historic)) {
-            $this->historics->add($historic);
-            $historic->addIdQuestion($this);
+        if (!$this->historicsQuestions->contains($historicsQuestion)) {
+            $this->historicsQuestions->add($historicsQuestion);
+            $historicsQuestion->setIdQuestion($this);
         }
 
         return $this;
     }
 
-    public function removeHistoric(Historics $historic): self
+    public function removeHistoricsQuestion(HistoricsQuestions $historicsQuestion): self
     {
-        if ($this->historics->removeElement($historic)) {
-            $historic->removeIdQuestion($this);
+        if ($this->historicsQuestions->removeElement($historicsQuestion)) {
+            // set the owning side to null (unless already changed)
+            if ($historicsQuestion->getIdQuestion() === $this) {
+                $historicsQuestion->setIdQuestion(null);
+            }
         }
 
         return $this;
