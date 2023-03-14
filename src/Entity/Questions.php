@@ -23,11 +23,14 @@ class Questions
     private Collection $answers;
 
     #[ORM\OneToOne(inversedBy: 'questions', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Answers $id_success = null;
 
     #[ORM\OneToMany(mappedBy: 'id_question', targetEntity: HistoricsQuestions::class)]
     private Collection $historicsQuestions;
+
+    #[ORM\ManyToMany(targetEntity: Categories::class, mappedBy: 'question')]
+    private Collection $categories;
 
     // #[ORM\ManyToMany(targetEntity: Historics::class, mappedBy: 'id_question')]
     // private Collection $historics;
@@ -37,6 +40,7 @@ class Questions
         $this->answers = new ArrayCollection();
         // $this->historics = new ArrayCollection();
         $this->historicsQuestions = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -150,6 +154,33 @@ class Questions
             if ($historicsQuestion->getIdQuestion() === $this) {
                 $historicsQuestion->setIdQuestion(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Categories>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Categories $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+            $category->addQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Categories $category): self
+    {
+        if ($this->categories->removeElement($category)) {
+            $category->removeQuestion($this);
         }
 
         return $this;

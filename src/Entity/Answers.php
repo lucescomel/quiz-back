@@ -20,8 +20,7 @@ class Answers
     #[ORM\JoinColumn(nullable: false)]
     private ?Questions $id_question = null;
 
-    #[ORM\OneToOne(mappedBy: 'id_success', cascade: ['persist', 'remove'])]
-    private ?Questions $questions = null;
+
 
     public function getId(): ?int
     {
@@ -48,23 +47,6 @@ class Answers
     public function setIdQuestion(?Questions $id_question): self
     {
         $this->id_question = $id_question;
-
-        return $this;
-    }
-
-    public function getQuestions(): ?Questions
-    {
-        return $this->questions;
-    }
-
-    public function setQuestions(Questions $questions): self
-    {
-        // set the owning side of the relation if necessary
-        if ($questions->getIdSuccess() !== $this) {
-            $questions->setIdSuccess($this);
-        }
-
-        $this->questions = $questions;
 
         return $this;
     }
