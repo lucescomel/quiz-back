@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -30,6 +32,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
+
+    #[ORM\OneToMany(mappedBy: 'id_user', targetEntity: Historics::class, orphanRemoval: true)]
+    private Collection $historics;
+
+    public function __construct()
+    {
+        $this->historics = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -109,6 +119,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setName(?string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Historics>
+     */
+    public function getHistorics(): Collection
+    {
+        return $this->historics;
+    }
+
+    public function addHistoric(Historics $historic): self
+    {
+        if (!$this->historics->contains($historic)) {
+            $this->historics->add($historic);
+            $historic->setIdUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHistoric(Historics $historic): self
+    {
+        if ($this->historics->removeElement($historic)) {
+            // set the owning side to null (unless already changed)
+            if ($historic->getIdUser() === $this) {
+                $historic->setIdUser(null);
+            }
+        }
 
         return $this;
     }

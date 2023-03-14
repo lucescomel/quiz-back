@@ -25,6 +25,10 @@ class Historics
     #[ORM\ManyToMany(targetEntity: Questions::class, inversedBy: 'historics')]
     private Collection $id_question;
 
+    #[ORM\ManyToOne(inversedBy: 'historics')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $id_user = null;
+
     public function __construct()
     {
         $this->id_question = new ArrayCollection();
@@ -79,6 +83,18 @@ class Historics
     public function removeIdQuestion(Questions $idQuestion): self
     {
         $this->id_question->removeElement($idQuestion);
+
+        return $this;
+    }
+
+    public function getIdUser(): ?User
+    {
+        return $this->id_user;
+    }
+
+    public function setIdUser(?User $id_user): self
+    {
+        $this->id_user = $id_user;
 
         return $this;
     }
