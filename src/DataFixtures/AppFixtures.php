@@ -55,7 +55,6 @@ class AppFixtures extends Fixture
                 $answers->setIdQuestion($question);
                 $manager->persist($answers);
                 $listResponse[] = $answers;
-                //$question->addAnswer($answers);
             }
             $question->setIdSuccess($listResponse[array_rand($listResponse)]);
             $manager->persist($question);
