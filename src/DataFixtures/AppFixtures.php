@@ -7,6 +7,7 @@ use App\Entity\Categories;
 use App\Entity\Historics;
 use App\Entity\Questions;
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -66,7 +67,7 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 5; $i++) {
             $historic = new Historics();
             $historic->setNote(3);
-            $historic->setHistoryDate(null);
+            $historic->setHistoryDate(new DateTime());
             $historic->setIdUser($userAdmin);
             $manager->persist($historic);
         }
