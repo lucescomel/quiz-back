@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Answers;
 use App\Entity\Categories;
 use App\Entity\Historics;
+use App\Entity\HistoricsQuestions;
 use App\Entity\Questions;
 use App\Entity\User;
 use DateTime;
@@ -42,15 +43,6 @@ class AppFixtures extends Fixture
         $manager->persist($userAdmin);
 
 
-        // Création d'un historique
-        for ($i = 0; $i < 5; $i++) {
-            $historic = new Historics();
-            $historic->setNote(3);
-            $historic->setHistoryDate(new DateTime());
-            $historic->setIdUser($userAdmin);
-            $manager->persist($historic);
-        }
-
         //Création d'une catégorie
         $listCategory = [];
         for ($i = 0; $i < 5; $i++) {
@@ -61,8 +53,8 @@ class AppFixtures extends Fixture
         }
 
         // Création d'une question/réponse
+        $listQuestion = [];
         for ($i = 0; $i < 5; $i++) {
-
             $question = new Questions();
             $question->setTitle("Ceci est la question n°" . $i);
             $manager->persist($question);
@@ -77,8 +69,32 @@ class AppFixtures extends Fixture
             $question->setIdSuccess($listResponse[array_rand($listResponse)]);
             $question->addCategory($listCategory[array_rand($listCategory)]);
             $manager->persist($question);
+            $listQuestion[] = $question;
         }
 
+        // Création d'un historique
+        $listHistoric = [];
+        for ($i = 0; $i < 5; $i++) {
+            $historic = new Historics();
+            $historic->setHistoryDate(new DateTime());
+            $historic->setIdUser($userAdmin);
+            $manager->persist($historic);
+            $listHistoric[] = $historic;
+
+            $listSuccess = [];
+            for ($k = 0; $k < 10; $k++) {
+                $quiz = new HistoricsQuestions();
+                $quiz->setSuccess(true);
+                if ($quiz->isSuccess() === true) {
+                    $listSuccess[] = $quiz;
+                }
+                $quiz->setIdQuestion($listQuestion[array_rand($listQuestion)]);
+                $quiz->setIdHistoric($listHistoric[array_rand($listHistoric)]);
+                $manager->persist($quiz);
+            }
+            $historic->setNote(count($listSuccess));
+            $manager->persist($historic);
+        }
 
         $manager->flush();
     }
