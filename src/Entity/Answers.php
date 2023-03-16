@@ -1,11 +1,16 @@
 <?php
 
+//Voici l'entity Answers
+
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\AnswersRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+
 #[ORM\Entity(repositoryClass: AnswersRepository::class)]
+#[ApiResource()]
 class Answers
 {
     #[ORM\Id]
@@ -19,6 +24,27 @@ class Answers
     #[ORM\ManyToOne(inversedBy: 'answers')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Questions $id_question = null;
+
+    #[ORM\OneToOne(mappedBy: 'id_success', cascade: ['persist', 'remove'])]
+    private ?Questions $questions = null;
+
+    public function getQuestions(): ?Questions
+    {
+        return $this->questions;
+    }
+
+    public function setQuestions(Questions $questions): self
+    {
+        // set the owning side of the relation if necessary
+        if ($questions->getIdSuccess() !== $this) {
+            $questions->setIdSuccess($this);
+        }
+
+        $this->questions = $questions;
+
+        return $this;
+    }
+
 
 
 

@@ -1,11 +1,17 @@
 <?php
 
+//Voici l'entity HistoricsQuestions
+
+
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\HistoricsQuestionsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+
 #[ORM\Entity(repositoryClass: HistoricsQuestionsRepository::class)]
+#[ApiResource()]
 class HistoricsQuestions
 {
     #[ORM\Id]
