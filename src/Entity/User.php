@@ -1,5 +1,9 @@
 <?php
 
+//Voici l'entity User
+
+
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;

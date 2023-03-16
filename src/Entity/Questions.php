@@ -1,5 +1,8 @@
 <?php
 
+//Voici l'entity Questions
+
+
 namespace App\Entity;
 
 use App\Repository\QuestionsRepository;
@@ -179,6 +182,7 @@ class Questions
         return $this;
     }
 
+ 
     public function removeCategory(Categories $category): self
     {
         if ($this->categories->removeElement($category)) {

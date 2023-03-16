@@ -1,5 +1,7 @@
 <?php
 
+//Voici l'entity Categories
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;

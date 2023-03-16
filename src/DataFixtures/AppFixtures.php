@@ -42,6 +42,23 @@ class AppFixtures extends Fixture
         $manager->persist($userAdmin);
 
 
+        // Création d'un historique
+        for ($i = 0; $i < 5; $i++) {
+            $historic = new Historics();
+            $historic->setNote(3);
+            $historic->setHistoryDate(new DateTime());
+            $historic->setIdUser($userAdmin);
+            $manager->persist($historic);
+        }
+
+        //Création d'une catégorie
+        $listCategory = [];
+        for ($i = 0; $i < 5; $i++) {
+            $categorie = new Categories();
+            $categorie->setName("catégorie n°" . $i);
+            $manager->persist($categorie);
+            $listCategory[] = $categorie;
+        }
 
         // Création d'une question/réponse
         for ($i = 0; $i < 5; $i++) {
@@ -58,28 +75,9 @@ class AppFixtures extends Fixture
                 $listResponse[] = $answers;
             }
             $question->setIdSuccess($listResponse[array_rand($listResponse)]);
+            $question->addCategory($listCategory[array_rand($listCategory)]);
             $manager->persist($question);
         }
-
-
-
-        // Création d'un historique
-        for ($i = 0; $i < 5; $i++) {
-            $historic = new Historics();
-            $historic->setNote(3);
-            $historic->setHistoryDate(new DateTime());
-            $historic->setIdUser($userAdmin);
-            $manager->persist($historic);
-        }
-
-        //Création d'une catégorie
-        for ($i = 0; $i < 5; $i++) {
-            $categorie = new Categories();
-            $categorie->setName("catégorie n°" . $i);
-            $manager->persist($categorie);
-        }
-
-
 
 
         $manager->flush();

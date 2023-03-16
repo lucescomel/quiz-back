@@ -1,5 +1,7 @@
 <?php
 
+//Voici l'entity Historics
+
 namespace App\Entity;
 
 use App\Repository\HistoricsRepository;

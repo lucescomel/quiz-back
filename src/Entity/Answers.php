@@ -1,5 +1,7 @@
 <?php
 
+//Voici l'entity Answers
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;

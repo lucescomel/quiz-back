@@ -1,5 +1,8 @@
 <?php
 
+//Voici l'entity HistoricsQuestions
+
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
