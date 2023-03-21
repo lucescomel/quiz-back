@@ -1,18 +1,23 @@
 <?php
 
-//Voici l'entity Historics
-
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\HistoricsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource as MetadataApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: HistoricsRepository::class)]
-#[MetadataApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']],
+)]
+#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'id_user' => 'exact'])]
+
 class Historics
 {
     #[ORM\Id]
@@ -24,6 +29,7 @@ class Historics
     private ?int $note = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['read'])]
     private ?\DateTimeInterface $history_date = null;
 
     // #[ORM\ManyToMany(targetEntity: Questions::class, inversedBy: 'historics')]
@@ -34,17 +40,14 @@ class Historics
     private ?User $id_user = null;
 
     #[ORM\OneToMany(mappedBy: 'id_historic', targetEntity: HistoricsQuestions::class)]
+    #[Groups(['read'])]
     private Collection $historicsQuestions;
 
     public function __construct()
     {
+        // $this->id_question = new ArrayCollection();
         $this->historicsQuestions = new ArrayCollection();
     }
-
-    // public function __construct()
-    // {
-    //     $this->id_question = new ArrayCollection();
-    // }
 
     public function getId(): ?int
     {

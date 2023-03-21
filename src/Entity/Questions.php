@@ -1,19 +1,17 @@
 <?php
 
-//Voici l'entity Questions
-
-
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\QuestionsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource as MetadataApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: QuestionsRepository::class)]
-#[MetadataApiResource()]
+#[ApiResource()]
 class Questions
 {
     #[ORM\Id]
@@ -35,6 +33,7 @@ class Questions
     private Collection $historicsQuestions;
 
     #[ORM\ManyToMany(targetEntity: Categories::class, mappedBy: 'question')]
+    #[Groups(['read'])]
     private Collection $categories;
 
     // #[ORM\ManyToMany(targetEntity: Historics::class, mappedBy: 'id_question')]
@@ -182,7 +181,6 @@ class Questions
         return $this;
     }
 
- 
     public function removeCategory(Categories $category): self
     {
         if ($this->categories->removeElement($category)) {
