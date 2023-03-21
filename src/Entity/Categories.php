@@ -1,7 +1,5 @@
 <?php
 
-//Voici l'entity Categories
-
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -9,6 +7,7 @@ use App\Repository\CategoriesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategoriesRepository::class)]
 #[ApiResource()]
@@ -17,9 +16,11 @@ class Categories
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read'])]
     private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: Questions::class, inversedBy: 'categories')]
@@ -71,3 +72,4 @@ class Categories
         return $this;
     }
 }
+

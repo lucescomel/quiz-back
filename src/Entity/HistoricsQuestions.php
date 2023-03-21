@@ -1,14 +1,11 @@
 <?php
 
-//Voici l'entity HistoricsQuestions
-
-
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\HistoricsQuestionsRepository;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: HistoricsQuestionsRepository::class)]
 #[ApiResource()]
@@ -17,12 +14,14 @@ class HistoricsQuestions
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read'])]
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $success = null;
 
     #[ORM\ManyToOne(inversedBy: 'historicsQuestions')]
+    #[Groups(['read'])]
     private ?Questions $id_question = null;
 
     #[ORM\ManyToOne(inversedBy: 'historicsQuestions')]

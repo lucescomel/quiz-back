@@ -2,6 +2,8 @@
 
 namespace App\DataFixtures;
 
+namespace App\DataFixtures;
+
 use App\Entity\Answers;
 use App\Entity\Categories;
 use App\Entity\Historics;
@@ -27,32 +29,30 @@ class AppFixtures extends Fixture
     {
         // Création d'un user "normal"
         $user = new User();
-        $user->setEmail("user@quiz.com");
+        $user->setEmail("user@gmail.com");
         $user->setRoles(["ROLE_USER"]);
-        $user->setPassword($this->userPasswordHasher->hashPassword($user, "password"));
-        $user->setName('user');
-        $manager->persist($user);
+        $user->setPassword($this->userPasswordHasher->hashPassword($user, "123456"));
+        $user->setName("user");
 
+        $manager->persist($user);
 
         // Création d'un user admin
         $userAdmin = new User();
-        $userAdmin->setEmail("admin@quiz.com");
+        $userAdmin->setEmail("aurore@gmail.com");
         $userAdmin->setRoles(["ROLE_ADMIN"]);
-        $userAdmin->setPassword($this->userPasswordHasher->hashPassword($userAdmin, "password"));
-        $userAdmin->setName('admin');
+        $userAdmin->setPassword($this->userPasswordHasher->hashPassword($userAdmin, "123456"));
+        $userAdmin->setName("aurore");
         $manager->persist($userAdmin);
 
-
-        //Création d'une catégorie
+        //Creation categorie
         $listCategory = [];
         for ($i = 0; $i < 5; $i++) {
             $categorie = new Categories();
-            $categorie->setName("catégorie n°" . $i);
+            $categorie->setName("nom de la categorie" . $i);
             $manager->persist($categorie);
             $listCategory[] = $categorie;
         }
-
-        // Création d'une question/réponse
+        //Creation question et réponses
         $listQuestion = [];
         for ($i = 0; $i < 5; $i++) {
             $question = new Questions();
@@ -65,14 +65,16 @@ class AppFixtures extends Fixture
                 $answers->setIdQuestion($question);
                 $manager->persist($answers);
                 $listResponse[] = $answers;
+                //$question->addAnswer($answers);
             }
             $question->setIdSuccess($listResponse[array_rand($listResponse)]);
+            $question->addCategory($listCategory[array_rand($listCategory)]);
             $question->addCategory($listCategory[array_rand($listCategory)]);
             $manager->persist($question);
             $listQuestion[] = $question;
         }
 
-        // Création d'un historique
+        //creation d'un historique
         $listHistoric = [];
         for ($i = 0; $i < 5; $i++) {
             $historic = new Historics();
@@ -95,7 +97,7 @@ class AppFixtures extends Fixture
             $historic->setNote(count($listSuccess));
             $manager->persist($historic);
         }
-
         $manager->flush();
     }
 }
+
