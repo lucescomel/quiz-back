@@ -74,8 +74,11 @@ class DefaultController extends AbstractController
             // [1=>25[0=>{id:1, id_question: 2}]]
 
         }
-        $historicWithCat = $historic->getCatByHistoric(2);
-        $jsonUser = $serializer->serialize($historicWithCat, 'json');
+        foreach ($listHistoricsId as $raw) {
+            $historicWithCat = $historic->getCatByHistoric($raw);
+            array_push($listGlobal, $historicWithCat);
+        }
+        $jsonUser = $serializer->serialize($listGlobal, 'json');
 
         return new JsonResponse($jsonUser, Response::HTTP_OK, [], true);
     }
