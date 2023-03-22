@@ -23,9 +23,11 @@ class Historics
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read'])]
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read'])]
     private ?int $note = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
