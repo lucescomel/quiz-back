@@ -2,13 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Categories;
 use App\Entity\User;
+use App\Repository\AnswersRepository;
 use App\Repository\CategoriesRepository;
 use App\Repository\HistoricsQuestionsRepository;
 use App\Repository\HistoricsRepository;
 use App\Repository\QuestionsRepository;
 use App\Repository\UserRepository;
 use App\Utils\Historic;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -82,6 +85,34 @@ class DefaultController extends AbstractController
 
         return new JsonResponse($jsonUser, Response::HTTP_OK, [], true);
     }
+
+    #[Route('/apip/cat_questions/{id}', name: 'catQuestions')]
+    public function getQuestionsByCategory(int $id, SerializerInterface $serializer, EntityManagerInterface $entityManager, CategoriesRepository $categoriesRepository, Categories $categories, QuestionsRepository $questionsRepository, AnswersRepository $answersRepository): JsonResponse
+    {
+        $category = $categoriesRepository->findOneBy(["id" => $id]);
+        $idCat = $category->getId();
+
+        $listQuestion = [];
+        if ($idCat === 1) {
+            $questions = $questionsRepository->findAll();
+            $randomKeys = array_rand($questions, 10);
+            foreach ($randomKeys as $key) {
+                array_push($listQuestion, $questions[$key]);
+            }
+        }
+        else {
+            $questions = $category->getQuestion()->toArray();
+            $questionsRand = array_rand($questions, 10);
+            foreach ($questionsRand as $key) {
+                array_push($listQuestion, $questions[$key]);
+            }
+            // $jsonUser = $serializer->serialize($liste, 'json');
+        }
+
+        $jsonUser = $serializer->serialize($listQuestion, 'json');
+        return new JsonResponse($jsonUser, Response::HTTP_OK, [], true);
+
+    }
 }
 
 // SELECT user.name,historics.id,historics.note,historics.history_date, categories.name
@@ -97,4 +128,3 @@ class DefaultController extends AbstractController
 // JOIN categories
 // ON categories_questions.categories_id = categories.name
 // GROUP BY user.id = 2
-
