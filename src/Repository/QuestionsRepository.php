@@ -63,4 +63,18 @@ class QuestionsRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+public function findQuestionsByCatRand(): array 
+{
+    $conn = $this->getEntityManager()->getConnection();
+    $sql = 'SELECT id
+        FROM questions
+        ORDER BY RAND()
+        LIMIT 10';
+    $stmt = $conn->prepare($sql);
+    $resultSet = $stmt->executeQuery();
+    //dd($resultSet->fetchAllAssociative());
+    return $resultSet->fetchAllAssociative();
+}
+
 }
