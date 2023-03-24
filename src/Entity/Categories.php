@@ -10,20 +10,21 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategoriesRepository::class)]
-#[ApiResource()]
+#[ApiResource(normalizationContext: ['groups' => ['read_cat']],)]
 class Categories
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read'])]
+    #[Groups(['read', 'read_cat'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read'])]
+    #[Groups(['read', 'read_cat'])]
     private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: Questions::class, inversedBy: 'categories')]
+    #[Groups(['read_cat'])]
     private Collection $question;
 
     public function __construct()
