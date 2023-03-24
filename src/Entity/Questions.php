@@ -17,16 +17,20 @@ class Questions
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read_cat'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['read_cat'])]
     private ?string $title = null;
 
     #[ORM\OneToMany(mappedBy: 'id_question', targetEntity: Answers::class, orphanRemoval: true)]
+    #[Groups(['read_cat'])]
     private Collection $answers;
 
     #[ORM\OneToOne(inversedBy: 'questions', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['read_cat'])]
     private ?Answers $id_success = null;
 
     #[ORM\OneToMany(mappedBy: 'id_question', targetEntity: HistoricsQuestions::class)]
